@@ -14,7 +14,7 @@ class AudioPreview:
         self.playing = False
         self.paused = False
         self.should_stop = False
-        self.gap_duration = 1.5  # seconds between files
+        self.gap_duration = 1.0  # seconds between files
         
     def get_audio_files(self, output_dir="output"):
         """Get all MP3 files from output directory, sorted by number"""
@@ -32,6 +32,15 @@ class AudioPreview:
             speaker = parts[1].replace('.mp3', '').title()
             return number, speaker
         return "000", "Unknown"
+        
+    def show_persistent_status(self):
+        """Show controls and current status - always visible"""
+        print("="*50)
+        print("🎵 AUDIO PREVIEW - Controls:")
+        print("SPACE=Pause/Resume | B=Back | N=Next | R=Repeat | S=Stop")
+        print("="*50)
+    
+    
     
     def show_controls(self):
         """Display control instructions"""
@@ -70,9 +79,14 @@ class AudioPreview:
         """Main continuous preview function"""
         self.audio_files = self.get_audio_files()
         
-        if not self.audio_files:
-            print("No MP3 files found in 'output' directory!")
-            return
+        if not self.should_stop:
+            # Interactive pause between files
+            print(f"  → Press ENTER for next file, 's' + ENTER to stop, 'r' + ENTER to repeat:")
+            user_input = input().strip().lower()
+            if user_input == 's':
+                self.should_stop = True
+            elif user_input == 'r':
+                self.current_index -= 1  # Stay on current file
         
         self.show_controls()
         print(f"\nFound {len(self.audio_files)} files. Starting continuous playback...\n")
@@ -87,6 +101,9 @@ class AudioPreview:
             current_file = self.audio_files[self.current_index]
             number, speaker = self.extract_info_from_filename(current_file)
             
+            # Clear screen and show persistent status
+            os.system('cls' if os.name == 'nt' else 'clear')
+            self.show_persistent_status()
             print(f"[{self.current_index + 1}/{len(self.audio_files)}] Playing: {number}_{speaker.lower()}.mp3")
             
             self.play_file(current_file)
@@ -179,3 +196,8 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+    # Temporary keyboard test
+    print("Test: Press 's' then Enter:")
+    test_input = input()
+    print(f"You pressed: '{test_input}'")
