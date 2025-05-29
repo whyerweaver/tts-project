@@ -7,6 +7,7 @@
 - [2025-05-26 – Preview Audio Troubleshooting](#2025-05-26--preview-audio-troubleshooting)
 - [2025-05-27 – New PC Setup & Path Resolution Issues](#2025-05-27--new-pc-setup--path-resolution-issues)
 - [2025-05-28 – Dynamic Path Management System Implementation](#2025-05-28--dynamic-path-management-system-implementation)
+- [2025-05-29 – Perfect 1:1 Script-to-Audio Correspondence Implementation](#2025-05-29--perfect-11-script-to-audio-correspondence-implementation)
 
 ---
 
@@ -295,3 +296,78 @@ Implement systematic solution for cross-platform path resolution issues using dy
 
 ### Current System Status
 **Fully functional TTS generation and editing system with robust cross-platform path management. All scripts now location-independent and ready for reliable GitHub collaboration workflow.**
+
+## 2025-05-29 – Perfect 1:1 Script-to-Audio Correspondence Implementation
+------------------------------------------------------------
+
+### Session Focus
+Implement perfect 1:1 correspondence between script line numbers and audio file numbers by using spoken sound effect placeholders with a dedicated EFFECT voice.
+
+### What Was Done
+- **Cross-Platform Verification:** Successfully tested dynamic path management system across PC1 and PC2 with GitHub sync
+- **Root Problem Analysis:** Identified that `[SFX_PHONE_RING]` markers broke script line to audio file correspondence, causing edit-single-line.js confusion
+- **Voice Selection for Sound Effects:** Tested all 21 available voices and selected Lily (pFZP5JQG7iQjIQuC4Bku) as EFFECT voice for gentle British whisper quality
+- **Sound Effect Bridge Solution:** Replaced non-speaking `[SFX_PHONE_RING]` with spoken `EFFECT: A phone is ringing.` to maintain numbering
+- **System Integration:** Added EFFECT voice to both generate-audio.js and edit-single-line.js voice mappings
+- **Perfect Correspondence Achievement:** Script line 6 now correctly corresponds to audio file 006 with no mapping confusion
+
+### Key Technical Breakthrough
+**Before:** 
+- Script line 6 (Aaron) → Audio file 005 (confusing mapping)
+- `[SFX_PHONE_RING]` skipped, breaking correspondence
+- edit-single-line.js required complex numbering calculations
+
+**After:**
+- Script line 6 (Aaron) → Audio file 006 (perfect match)
+- `EFFECT: A phone is ringing.` gets audio file 004 with Lily's voice
+- edit-single-line.js works with direct script line numbers
+
+### Solution Architecture
+1. **Four-Voice System:**
+   - LAURA (FGY2WhTYpPnrIDTdsKH5) - Podcast host
+   - AARON (TX3LPaxmHKxFdv7VOQHJ) - Caller/guest
+   - CHRIS (iP95p4xoKVk53GoZ742B) - Podcast co-host  
+   - EFFECT (pFZP5JQG7iQjIQuC4Bku) - Sound effect placeholders (Lily)
+
+2. **Perfect Workflow:**
+   - Edit script.txt line 6 with new Aaron dialogue
+   - Set edit-single-line.js: `fileNumber = 6, speaker = 'AARON'`
+   - Run edit script → Only file 006_aaron.mp3 regenerated
+   - All other 27 files remain unchanged
+
+### Proven Cross-Platform Reliability
+- ✅ PC1 ↔ PC2 ↔ GitHub sync works flawlessly
+- ✅ Dynamic path management eliminates "works here, breaks there" issues
+- ✅ Initialize.js provides location-independent operation
+
+### Workflow Improvements
+- **Intuitive Editing:** Script line numbers directly match audio file numbers
+- **Cost Efficiency:** Edit individual lines without regenerating entire script
+- **Clear Sound Effects:** Lily's gentle voice provides obvious but unobtrusive cues during preview
+- **No Mental Math:** Eliminated complex file number calculations and mapping confusion
+
+### Files Modified
+- **scripts/js/generate-audio.js** - Added EFFECT voice mapping
+- **scripts/js/edit-single-line.js** - Added EFFECT voice mapping  
+- **script.txt** - Replaced `[SFX_PHONE_RING]` with `EFFECT: A phone is ringing.`
+- **Created:** `test-all-voices.js` - Voice selection tool for all 21 available voices
+
+### Testing Results
+- **Cross-platform verification:** Complete success across PC1/PC2/GitHub
+- **Perfect correspondence:** Script line 6 = Audio file 006 confirmed
+- **Single-line editing:** Successfully replaced Aaron's line 6 with new content
+- **Sound effect integration:** Lily's voice provides clear, gentle placeholder cues
+
+### Key Learnings
+- **Sound effect handling:** Spoken placeholders more reliable than skip-markers for maintaining sequence
+- **Voice selection importance:** Testing all available voices crucial for finding right tone
+- **Documentation workflow:** Comprehensive session tracking enables seamless collaboration
+- **s,s,s methodology:** Single, short, simple steps prevented complexity creep
+
+### Next Steps
+- **Python Preview Conversion:** Convert preview-audio.py to JavaScript for unified ecosystem
+- **Additional Script Integration:** Apply dynamic path system to remaining utility scripts
+- **Enhanced Preview Features:** Consider adding script text display during preview playback
+
+### Current System Status
+**Perfect 1:1 script-to-audio correspondence achieved. Cross-platform reliability confirmed. Single-line editing workflow fully functional with cost-effective targeted regeneration capability.**

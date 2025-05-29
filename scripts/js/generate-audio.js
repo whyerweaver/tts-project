@@ -6,7 +6,8 @@ const { getProjectPath, ensureDirectoryExists } = require('../../initialize.js')
 const voices = {
     'LAURA': 'FGY2WhTYpPnrIDTdsKH5',
     'AARON': 'TX3LPaxmHKxFdv7VOQHJ', 
-    'CHRIS': 'iP95p4xoKVk53GoZ742B'
+    'CHRIS': 'iP95p4xoKVk53GoZ742B',
+    'EFFECT': 'pFZP5JQG7iQjIQuC4Bku'
 };
 
 async function generateSpeech(voiceName, text, filename) {

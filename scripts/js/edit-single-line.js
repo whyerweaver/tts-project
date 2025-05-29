@@ -6,7 +6,7 @@ const { getProjectPath, ensureDirectoryExists } = require('../../initialize.js')
 const voices = {
     'LAURA': 'FGY2WhTYpPnrIDTdsKH5',
     'AARON': 'TX3LPaxmHKxFdv7VOQHJ', 
-    'CHRIS': 'iP95p4xoKVk53GoZ742B'
+    'CHRIS': 'iP95p4xoKVk53GoZ742B', 'EFFECT': 'pFZP5JQG7iQjIQuC4Bku'
 };
 
 function findDialogueByFileNumber(fileNumber, speaker) {
@@ -96,7 +96,7 @@ async function generateSingleLine(fileNumber, speaker) {
 }
 
 // EDIT THESE VALUES:
-const fileNumber = 1;  // Which audio file number to replace (matches 001_, 002_, etc.)
-const speaker = 'LAURA';  // LAURA, AARON, or CHRIS - must match the speaker for that file
+const fileNumber = 6;  // Which audio file number to replace (matches 001_, 002_, etc.)
+const speaker = 'AARON';  // LAURA, AARON, or CHRIS - must match the speaker for that file
 
 generateSingleLine(fileNumber, speaker);
