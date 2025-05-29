@@ -1,6 +1,7 @@
 require('dotenv').config();
 const axios = require('axios');
 const fs = require('fs');
+const { getProjectPath, ensureDirectoryExists } = require('../../initialize.js');
 
 const voices = {
     'LAURA': 'FGY2WhTYpPnrIDTdsKH5',
@@ -8,17 +9,70 @@ const voices = {
     'CHRIS': 'iP95p4xoKVk53GoZ742B'
 };
 
-async function generateSingleLine(speaker, text, lineNumber) {
+function findDialogueByFileNumber(fileNumber, speaker) {
     try {
-        const filename = `${lineNumber.toString().padStart(3, '0')}_${speaker.toLowerCase()}.mp3`;
+        const script = fs.readFileSync(getProjectPath('script.txt'), 'utf8');
+        const lines = script.split('\n').filter(line => line.trim());
         
-        console.log(`Regenerating line ${lineNumber}: ${speaker}`);
-        console.log(`New text: "${text}"`);
+        let audioCounter = 1;
+        
+        for (const line of lines) {
+            if (line.startsWith('[SFX_')) {
+                // Sound effect marker - logged but doesn't increment counter
+                // (matches generate-audio.js logic exactly)
+                continue;
+            } else if (line.includes(':')) {
+                // Voice line
+                const [lineSpeaker, ...textParts] = line.split(':');
+                const text = textParts.join(':').trim();
+                const cleanSpeaker = lineSpeaker.trim();
+                
+                if (text && voices[cleanSpeaker]) {
+                    // This would be audio file number audioCounter
+                    if (audioCounter === fileNumber) {
+                        if (cleanSpeaker !== speaker) {
+                            console.log(`✗ Error: File ${fileNumber.toString().padStart(3, '0')} is spoken by ${cleanSpeaker}, not ${speaker}`);
+                            console.log(`   Line content: "${text}"`);
+                            return null;
+                        }
+                        
+                        return {
+                            speaker: cleanSpeaker,
+                            text: text,
+                            fileNumber: audioCounter
+                        };
+                    }
+                    audioCounter++; // Only increment for actual audio files
+                }
+            }
+        }
+        
+        console.log(`✗ Error: File number ${fileNumber} not found. Script generates ${audioCounter - 1} audio files.`);
+        return null;
+        
+    } catch (error) {
+        console.log(`✗ Error reading script.txt: ${error.message}`);
+        return null;
+    }
+}
+
+async function generateSingleLine(fileNumber, speaker) {
+    try {
+        // Find the line using the same numbering as generate-audio.js
+        const scriptLine = findDialogueByFileNumber(fileNumber, speaker);
+        if (!scriptLine) {
+            return;
+        }
+        
+        const filename = `${fileNumber.toString().padStart(3, '0')}_${speaker.toLowerCase()}.mp3`;
+        
+        console.log(`Regenerating file ${filename}: ${speaker}`);
+        console.log(`Text from script: "${scriptLine.text}"`);
         
         const response = await axios.post(
             `https://api.elevenlabs.io/v1/text-to-speech/${voices[speaker]}`,
             {
-                text: text,
+                text: scriptLine.text,
                 model_id: 'eleven_monolingual_v1'
             },
             {
@@ -31,7 +85,9 @@ async function generateSingleLine(speaker, text, lineNumber) {
             }
         );
         
-        fs.writeFileSync(`../../output/${filename}`, response.data);
+        // Use dynamic path builder - works from anywhere!
+        ensureDirectoryExists(getProjectPath('output'));
+        fs.writeFileSync(getProjectPath('output', filename), response.data);
         console.log(`✓ Updated: ${filename}`);
         
     } catch (error) {
@@ -40,8 +96,7 @@ async function generateSingleLine(speaker, text, lineNumber) {
 }
 
 // EDIT THESE VALUES:
-const lineNumber = 1;  // Which line number to replace (check timing-log.txt)
-const speaker = 'LAURA';  // LAURA, AARON, or CHRIS
-const newText = 'Welcome to the show, everyone! We have an interesting and timely topic for you today.';  // Your new text
+const fileNumber = 1;  // Which audio file number to replace (matches 001_, 002_, etc.)
+const speaker = 'LAURA';  // LAURA, AARON, or CHRIS - must match the speaker for that file
 
-generateSingleLine(speaker, newText, lineNumber);
+generateSingleLine(fileNumber, speaker);

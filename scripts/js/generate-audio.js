@@ -1,6 +1,7 @@
 require('dotenv').config();
 const axios = require('axios');
 const fs = require('fs');
+const { getProjectPath, ensureDirectoryExists } = require('../../initialize.js');
 
 const voices = {
     'LAURA': 'FGY2WhTYpPnrIDTdsKH5',
@@ -28,7 +29,9 @@ async function generateSpeech(voiceName, text, filename) {
             }
         );
         
-        fs.writeFileSync(`../../output/${filename}`, response.data);
+        // Use dynamic path builder - works from anywhere!
+        ensureDirectoryExists(getProjectPath('output'));
+        fs.writeFileSync(getProjectPath('output', filename), response.data);
         console.log(`✓ Created: ${filename}`);
         
     } catch (error) {
@@ -37,12 +40,10 @@ async function generateSpeech(voiceName, text, filename) {
 }
 
 async function processScript() {
-    // Create output folder
-    if (!fs.existsSync('../../output')) {
-        fs.mkdirSync('../../output');
-    }
+    // Ensure output directory exists
+    ensureDirectoryExists(getProjectPath('output'));
     
-    const script = fs.readFileSync('../../script.txt', 'utf8');
+    const script = fs.readFileSync(getProjectPath('script.txt'), 'utf8');
     const lines = script.split('\n').filter(line => line.trim());
     
     let audioCounter = 1;
@@ -50,7 +51,7 @@ async function processScript() {
     
     for (const line of lines) {
         if (line.startsWith('[SFX_')) {
-            // Sound effect marker
+            // Sound effect marker - log it but DON'T increment counter
             timingLog.push(`${audioCounter.toString().padStart(3, '0')}: ${line}`);
             console.log(`⚡ Sound effect noted: ${line}`);
         } else if (line.includes(':')) {
@@ -58,17 +59,17 @@ async function processScript() {
             const [speaker, ...textParts] = line.split(':');
             const text = textParts.join(':').trim();
             
-            if (text && voices[speaker]) {
-                const filename = `${audioCounter.toString().padStart(3, '0')}_${speaker.toLowerCase()}.mp3`;
-                await generateSpeech(speaker, text, filename);
-                timingLog.push(`${audioCounter.toString().padStart(3, '0')}: ${speaker} - "${text.substring(0, 50)}..."`);
-                audioCounter++;
+            if (text && voices[speaker.trim()]) {
+                const filename = `${audioCounter.toString().padStart(3, '0')}_${speaker.trim().toLowerCase()}.mp3`;
+                await generateSpeech(speaker.trim(), text, filename);
+                timingLog.push(`${audioCounter.toString().padStart(3, '0')}: ${speaker.trim()} - "${text.substring(0, 50)}..."`);
+                audioCounter++; // Only increment for actual audio files
             }
         }
     }
     
     // Save timing log
-    fs.writeFileSync('../../timing-log.txt', timingLog.join('\n'));
+    fs.writeFileSync(getProjectPath('timing-log.txt'), timingLog.join('\n'));
     console.log('\n✓ All audio generated!');
     console.log('✓ Check the "output" folder for your MP3 files');
     console.log('✓ Check "timing-log.txt" for the sequence and sound effect locations');
