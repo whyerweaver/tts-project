@@ -10,6 +10,7 @@
 - [2025-05-29 – Perfect 1:1 Script-to-Audio Correspondence Implementation](#2025-05-29--perfect-11-script-to-audio-correspondence-implementation)
 - [2025-05-30 – JavaScript Audio Preview System Implementation](#2025-05-30--javascript-audio-preview-system-implementation)
 - [2025-05-31 – Stage 1 Core Functionality: Dynamic HTML5 Audio Preview](#2025-05-31--stage-1-core-functionality-dynamic-html5-audio-preview)
+- [2025-05-31 Part 2 – Stage 1.5 Complete: Seamless Edit-to-Preview Workflow](#2025-05-31-part-2--stage-15-complete-seamless-edit-to-preview-workflow)
 
 ---
 
@@ -586,3 +587,80 @@ Achieved Stage 1 goal: Interactive audio preview system with real-time controls 
 - Ensure `scripts/audio-preview-dynamic.html` is saved in your project
 - Test the preview system works with your current script.txt
 - Note any specific editing needs for Stage 2 planning
+
+## 2025-05-31 Part 2 – Stage 1.5 Complete: Seamless Edit-to-Preview Workflow
+------------------------------------------------------------
+
+### Session Focus
+Achieved seamless edit-to-preview workflow by implementing URL parameter passing, auto-play functionality, and "Stop & Edit" button for interruption-free editing experience.
+
+### What Was Done
+- **Git Sync Verification:** Successfully pulled latest Stage 1 changes from remote repository to PC1 (17 objects updated)
+- **URL Parameter Implementation:** Added browser parameter reading to jump directly to edited audio files
+- **Auto-Play Integration:** Implemented automatic playback when arriving via edit workflow for immediate feedback
+- **Quality-of-Life Improvements:** Fixed Stop button behavior and added seamless edit-to-preview cycle
+- **Stop & Edit Button:** Created clean exit mechanism that prevents auto-play interference during script editing
+
+### Key Technical Achievements
+- **Dynamic URL Navigation:** `audio-preview-dynamic.html?file=8` opens directly to file 008
+- **Conditional Auto-Play:** Automatically starts playback only when arriving from edit workflow
+- **Cross-Platform Reliability:** Browser-based solution eliminates OS-specific audio command issues
+- **Clean Edit Workflow:** "Stop & Edit" button provides file number guidance and closes tab cleanly
+
+### Seamless Workflow Now Available
+1. **Listen to podcast** using HTML5 preview interface
+2. **Click "Stop & Edit"** when hearing issue (shows file number, closes tab)
+3. **Edit script.txt** without auto-play interference
+4. **Set file number** in `edit-single-line.js` from the alert
+5. **Run edit script** → automatically opens new tab at edited file and starts playing
+6. **Hear changes immediately** without manual navigation
+
+### Files Modified
+- **`audio-preview-dynamic.html`** - Complete Stage 1.5 implementation
+  - URL parameter reading in constructor: `urlParams.get('file')`
+  - Conditional auto-play for edit workflow
+  - Stop & Edit button with orange styling
+  - Clean tab closure functionality
+- **`scripts/js/edit-single-line.js`** - Enhanced with auto-open functionality
+  - URL generation with file parameter
+  - Automatic browser opening via `require('child_process').exec(start ${url})`
+
+### Current System Status
+**Stage 1.5 Complete:** Seamless edit-to-preview workflow eliminates all manual navigation and provides immediate audio feedback for script changes. System ready for production podcast editing with efficient iteration cycles.
+
+### Architecture Success
+- **Browser-first approach:** HTML5 audio provides superior control vs. OS command-line tools
+- **Parameter-driven navigation:** Clean URL-based positioning without complex state management
+- **Workflow optimization:** Each quality-of-life improvement builds on solid foundation
+- **Cross-platform compatibility:** Web standards ensure consistent behavior across all environments
+
+### Next Steps
+- **Stage 2 Development:** Consider inline script editing interface
+- **Enhanced Features:** Potential waveform display, batch editing capabilities
+- **File Organization:** Possible refactoring into separate HTML/CSS/JS files for maintainability
+
+### Key Files Touched
+- `audio-preview-dynamic.html` (enhanced with URL parameters, auto-play, Stop & Edit button)
+- `scripts/js/edit-single-line.js` (added auto-browser opening)
+
+### Development Philosophy Success
+- **s,s,s methodology:** Each enhancement tested individually before integration
+- **User workflow focus:** Solved real editing friction points with targeted improvements
+- **Quality-of-life priority:** Small improvements compound into significantly better experience
+- **Foundation building:** Each feature builds on previous work without architectural changes
+
+### Git Integration Status
+PC1 successfully synchronized with remote repository. All Stage 1 and 1.5 work properly versioned and ready for collaboration across multiple development environments.
+
+---
+
+## Instructions for Master Doc Update
+
+1. **Copy the TOC entry** (line 4) to your Table of Contents section
+2. **Copy the session block** (lines 8-79) to the end of your master document  
+3. **Save and upload** the updated master .md file to the project folder before next session
+
+## Next Session Preparation
+- Ensure all changes are committed to git for cross-PC reliability
+- Test complete edit workflow on any script changes needed
+- Consider Stage 2 inline editing requirements if desired

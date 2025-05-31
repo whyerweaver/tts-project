@@ -89,6 +89,10 @@ async function generateSingleLine(fileNumber, speaker) {
         ensureDirectoryExists(getProjectPath('output'));
         fs.writeFileSync(getProjectPath('output', filename), response.data);
         console.log(`✓ Updated: ${filename}`);
+        // NEW: Auto-open browser or provide URL
+        const url = `http://127.0.0.1:5500/scripts/audio-preview-dynamic.html?file=${fileNumber}`;
+        console.log(`\n🎵 Open preview at: ${url}`);
+        require('child_process').exec(`start ${url}`); // Windows auto-open
         
     } catch (error) {
         console.log(`✗ Error:`, error.message);
@@ -96,7 +100,7 @@ async function generateSingleLine(fileNumber, speaker) {
 }
 
 // EDIT THESE VALUES:
-const fileNumber = 6;  // Which audio file number to replace (matches 001_, 002_, etc.)
+const fileNumber = 12;  // Which audio file number to replace (matches 001_, 002_, etc.)
 const speaker = 'AARON';  // LAURA, AARON, or CHRIS - must match the speaker for that file
 
 generateSingleLine(fileNumber, speaker);

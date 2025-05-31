@@ -55,6 +55,9 @@
         
         .controls button.stop { background: #f44336; }
         .controls button.stop:hover:not(:disabled) { background: #da190b; }
+
+        .controls button.edit { background: #FF9800; }
+        .controls button.edit:hover:not(:disabled) { background: #F57C00; } 
         
         .progress-container {
             flex-grow: 1;
@@ -212,6 +215,7 @@
         <button id="prevBtn" disabled>⏮ Previous</button>
         <button id="nextBtn" disabled>⏭ Next</button>
         <button id="repeatBtn" disabled>🔄 Repeat</button>
+        <button id="editBtn" class="edit">✏️ Stop & Edit</button>
         
         <div class="progress-container">
             <div class="progress-bar" id="progressBar">
@@ -255,7 +259,16 @@
         class AudioPreview {
             constructor() {
                 this.audioPlayer = document.getElementById('audioPlayer');
-                this.currentIndex = 0;
+                // Read URL parameters to set starting position
+                const urlParams = new URLSearchParams(window.location.search);
+                const startFile = urlParams.get('file');
+                this.currentIndex = startFile ? parseInt(startFile) - 1 : 0;
+                if (startFile) {
+                // Small delay to ensure audio loads, then auto-play
+                setTimeout(() => {
+                    this.play();
+                }, 500);
+}
                 this.isPlaying = false;
                 this.gapDuration = 1; // seconds
                 this.gapTimer = null;
@@ -267,6 +280,7 @@
                 this.setupEventListeners();
                 this.loadScriptContent();
             }
+            
             
             setupElements() {
                 this.playBtn = document.getElementById('playBtn');
@@ -281,6 +295,7 @@
                 this.currentTimeSpan = document.getElementById('currentTime');
                 this.durationSpan = document.getElementById('duration');
                 this.gapSelect = document.getElementById('gapSelect');
+                this.editBtn = document.getElementById('editBtn');
             }
             
             setupEventListeners() {
@@ -292,6 +307,8 @@
                 this.repeatBtn.addEventListener('click', () => this.repeat());
                 this.gapSelect.addEventListener('change', (e) => this.gapDuration = parseFloat(e.target.value));
                 
+                this.editBtn.addEventListener('click', () => this.stopAndEdit());
+
                 this.audioPlayer.addEventListener('loadedmetadata', () => this.updateDuration());
                 this.audioPlayer.addEventListener('timeupdate', () => this.updateProgress());
                 this.audioPlayer.addEventListener('ended', () => this.handleAudioEnd());
@@ -455,12 +472,18 @@
                 this.audioPlayer.pause();
                 this.audioPlayer.currentTime = 0;
                 this.isPlaying = false;
-                this.currentIndex = 0;
+                // this.currentIndex = 0;
                 this.loadCurrentFile();
                 this.updateStatus('⏹ Stopped');
                 this.updateButtons();
                 this.clearGapTimer();
             }
+
+            stopAndEdit() {
+                const currentFile = this.currentIndex + 1;
+                alert(`Edit file ${currentFile} in script.txt, then run edit-single-line.js with fileNumber = ${currentFile}`);
+                window.close();
+}
             
             previous() {
                 if (this.currentIndex > 0) {
