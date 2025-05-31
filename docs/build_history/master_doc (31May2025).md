@@ -9,6 +9,7 @@
 - [2025-05-28 – Dynamic Path Management System Implementation](#2025-05-28--dynamic-path-management-system-implementation)
 - [2025-05-29 – Perfect 1:1 Script-to-Audio Correspondence Implementation](#2025-05-29--perfect-11-script-to-audio-correspondence-implementation)
 - [2025-05-30 – JavaScript Audio Preview System Implementation](#2025-05-30--javascript-audio-preview-system-implementation)
+- [2025-05-31 – Stage 1 Core Functionality: Dynamic HTML5 Audio Preview](#2025-05-31--stage-1-core-functionality-dynamic-html5-audio-preview)
 
 ---
 
@@ -515,3 +516,73 @@ Strategic pivot from problematic Node.js/PowerShell audio system to browser-base
 **Achieved major architectural breakthrough** - transitioned from fighting OS limitations to leveraging web standards for superior audio control. Created solid foundation for advanced editing workflows while maintaining full cross-platform compatibility.
 
 **Status:** Core audio preview functionality working with real files. Ready for script integration and editing workflow development.
+
+## 2025-05-31 – Stage 1 Core Functionality: Dynamic HTML5 Audio Preview
+------------------------------------------------------------
+
+### Session Focus
+Achieved Stage 1 goal: Interactive audio preview system with real-time controls and dynamic script text loading for immediate podcast production workflow.
+
+### What Was Done
+- **Strategic Architecture Review:** Evaluated scattered preview attempts (Python → Node.js → HTML) and established three-stage development plan
+- **HTML5 Audio System Completion:** Fixed demo interference code, implemented real audio playback with full controls
+- **Dynamic Script Integration:** Replaced hardcoded sample text with live script.txt parsing using VS Code Live Server
+- **Perfect Script-to-Audio Sync:** Preview now displays actual current script content matching regenerated audio files
+- **Cross-Platform Foundation:** Browser-based solution eliminates OS-specific audio command issues
+
+### Key Technical Achievements
+- **Real Audio Controls:** HTML5 audio with true pause/resume, progress seeking, playlist navigation
+- **Dynamic Content Loading:** Fetches and parses actual script.txt using same logic as generate-audio.js
+- **Live Server Integration:** Leverages VS Code Live Server for seamless file access without complex setup
+- **Error Handling:** Helpful user messages for setup issues and file loading problems
+- **Keyboard Controls:** Space (play/pause), arrows (nav), S (stop), R (repeat)
+
+### Production Workflow Now Available
+1. **Edit script.txt** with dialogue changes
+2. **Regenerate audio:** `node scripts/js/generate-audio.js`
+3. **Preview interactively:** Open `scripts/audio-preview-dynamic.html` with Live Server
+4. **Test specific lines:** Use playlist navigation and script text display
+5. **Edit individual lines:** Modify `edit-single-line.js` variables, regenerate single files
+6. **Final assembly:** Import numbered MP3s to Audacity with confidence in content
+
+### Files Created/Modified
+- **`scripts/audio-preview-dynamic.html`** - Complete interactive preview system
+  - Dynamic script.txt loading via fetch API
+  - Real HTML5 audio controls with seeking
+  - Live script text display synchronized to audio files
+  - Professional dark theme interface
+  - Error handling and setup guidance
+
+### Current System Status
+**Stage 1 Complete:** Core functionality working perfectly for immediate podcast production needs. User can now efficiently preview, identify issues, and make targeted edits before final Audacity assembly.
+
+### Next Steps
+- **Stage 2 Development:** Add inline editing interface for seamless script modification
+- **Structure Reorganization:** Move toward unified app/ directory structure
+- **Backend API Foundation:** Convert edit-single-line.js to web-based editing workflow
+
+### Key Files Touched
+- `scripts/audio-preview-dynamic.html` (new - complete preview system)
+
+### Development Philosophy Success
+- **s,s,s methodology:** Single step fixes (remove demo code → add dynamic loading)
+- **Strategic planning:** Established clear three-stage roadmap with immediate functionality priority
+- **Foundation building:** HTML5 approach creates expandable base for Stage 2/3 development
+- **User workflow focus:** Solved real podcast production need with professional tools
+
+### Architecture Foundation Established
+**Browser-based preview system provides solid foundation for Stage 2 inline editing and Stage 3 full script management application. Cross-platform reliability achieved through web standards rather than OS-specific solutions.**
+
+---
+
+## Instructions for Master Doc Update
+
+1. **Download this .md file** and save locally
+2. **Copy the TOC entry** (line 4-6) to your Table of Contents section
+3. **Copy the session block** (lines 10-68) to the end of your master document
+4. **Upload the updated master .md file** to the project folder before next session
+
+## Next Session Preparation
+- Ensure `scripts/audio-preview-dynamic.html` is saved in your project
+- Test the preview system works with your current script.txt
+- Note any specific editing needs for Stage 2 planning
