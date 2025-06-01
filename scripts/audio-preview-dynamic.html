@@ -198,6 +198,77 @@
             margin: 10px 0;
             color: #ff6b6b;
         }
+
+        .script-edit {
+            background: #1a1a1a;
+            color: #e0e0e0;
+            border: 2px solid #4CAF50;
+            border-radius: 5px;
+            padding: 15px;
+            font-size: 16px;
+            line-height: 1.5;
+            width: 100%;
+            min-height: 80px;
+            resize: vertical;
+            font-family: inherit;
+        }
+        
+        .edit-button {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        
+        .edit-button:hover {
+            background: #1976D2;
+        }
+        
+        .save-button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        
+        .save-button:hover:not(:disabled) {
+            background: #45a049;
+        }
+        
+        .save-button:disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
+        
+        .cancel-button {
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        
+        .cancel-button:hover {
+            background: #da190b;
+        }
+        
+        .edit-status {
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
@@ -243,10 +314,20 @@
             <div id="speakerName" class="speaker-name">LOADING...</div>
             <div id="fileCounter" class="file-counter">- / -</div>
         </div>
-        <div id="scriptText" class="script-text">
-            Loading script content...
+        
+        <div class="script-container">
+    <div id="scriptText" class="script-text">
+        Loading script content...
+        </div>
+        <textarea id="scriptEdit" class="script-edit" style="display: none;"></textarea>
+        <div class="edit-controls" style="margin-top: 10px;">
+            <button id="editTextBtn" class="edit-button">✏️ Edit Text</button>
+            <button id="saveBtn" class="save-button" style="display: none;">💾 Save & Regenerate</button>
+            <button id="cancelBtn" class="cancel-button" style="display: none;">❌ Cancel</button>
+            <span id="editStatus" class="edit-status" style="margin-left: 15px; font-style: italic; color: #ccc;"></span>
         </div>
     </div>
+
 
     <div class="playlist">
         <h3>Playlist</h3>
@@ -263,12 +344,15 @@
                 const urlParams = new URLSearchParams(window.location.search);
                 const startFile = urlParams.get('file');
                 this.currentIndex = startFile ? parseInt(startFile) - 1 : 0;
-                if (startFile) {
+                
+                // if (startFile) {
                 // Small delay to ensure audio loads, then auto-play
-                setTimeout(() => {
-                    this.play();
-                }, 500);
-}
+                // setTimeout(() => {
+                //     this.play();
+                // }, 500);
+                // }
+
+                this.shouldAutoPlay = !!startFile; // Flag for auto-play intent
                 this.isPlaying = false;
                 this.gapDuration = 1; // seconds
                 this.gapTimer = null;
@@ -307,7 +391,7 @@
                 this.repeatBtn.addEventListener('click', () => this.repeat());
                 this.gapSelect.addEventListener('change', (e) => this.gapDuration = parseFloat(e.target.value));
                 
-                this.editBtn.addEventListener('click', () => this.stopAndEdit());
+                // this.editBtn.addEventListener('click', () => this.stopAndEdit());
 
                 this.audioPlayer.addEventListener('loadedmetadata', () => this.updateDuration());
                 this.audioPlayer.addEventListener('timeupdate', () => this.updateProgress());
@@ -320,6 +404,18 @@
                 
                 // Keyboard shortcuts
                 document.addEventListener('keydown', (e) => this.handleKeyboard(e));
+
+                // Edit functionality event listeners
+                this.editTextBtn = document.getElementById('editTextBtn');
+                this.saveBtn = document.getElementById('saveBtn');
+                this.cancelBtn = document.getElementById('cancelBtn');
+                this.scriptEdit = document.getElementById('scriptEdit');
+                this.editStatus = document.getElementById('editStatus');
+                
+                this.editTextBtn.addEventListener('click', () => this.startEdit());
+                this.saveBtn.addEventListener('click', () => this.saveAndRegenerate());
+                this.cancelBtn.addEventListener('click', () => this.cancelEdit());
+
             }
             
             async loadScriptContent() {
@@ -442,6 +538,22 @@
             handleCanPlay() {
                 if (this.status.textContent.includes('Loading')) {
                     this.updateStatus('⏹ Ready');
+                }
+                
+                // Auto-play only if we came from edit workflow
+                if (this.shouldAutoPlay) {
+                    this.shouldAutoPlay = false; // Clear flag
+                    
+                    // Try to auto-play with Chrome policy handling
+                    this.audioPlayer.play().then(() => {
+                        this.isPlaying = true;
+                        this.updateStatus('▶ Playing (auto-started)');
+                        this.updateButtons();
+                    }).catch(error => {
+                        // Chrome blocked auto-play - show helpful message
+                        this.updateStatus('🔒 Ready (click Play - auto-play blocked)');
+                        console.log('Auto-play blocked by browser:', error);
+                    });
                 }
             }
             
@@ -633,12 +745,114 @@
                 this.isPlaying = false;
                 this.updateButtons();
             }
+            startEdit() {
+                // Force stop all playback
+                this.audioPlayer.pause();
+                this.audioPlayer.currentTime = 0;
+                this.isPlaying = false;
+                this.updateStatus('⏹ Stopped for editing');
+                this.updateButtons();
+                
+                // Switch to edit mode
+                document.getElementById('scriptText').style.display = 'none';
+                this.scriptEdit.style.display = 'block';
+                this.scriptEdit.value = document.getElementById('scriptText').textContent;
+                
+                // Show/hide buttons
+                this.editBtn.style.display = 'none';
+                this.saveBtn.style.display = 'inline-block';
+                this.cancelBtn.style.display = 'inline-block';
+                this.editStatus.textContent = 'Editing mode - make your changes';
+                
+                // Focus on text area
+                this.scriptEdit.focus();
+            }
+            
+            cancelEdit() {
+                // Switch back to view mode
+                document.getElementById('scriptText').style.display = 'block';
+                this.scriptEdit.style.display = 'none';
+                
+                // Show/hide buttons
+                this.editBtn.style.display = 'inline-block';
+                this.saveBtn.style.display = 'none';
+                this.cancelBtn.style.display = 'none';
+                this.editStatus.textContent = '';
+            }
+            
+           async saveAndRegenerate() {
+                this.editStatus.textContent = 'Saving and regenerating...';
+                this.saveBtn.disabled = true;
+                
+                try {
+                    const current = this.playlist[this.currentIndex];
+                    const newText = this.scriptEdit.value;
+                    
+                    // Call our API
+                    const response = await fetch('http://localhost:3000/api/save-and-regenerate', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            lineNumber: this.currentIndex + 1,
+                            speaker: current.speaker,
+                            newText: newText
+                        })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        this.editStatus.textContent = '✅ Saved and regenerated!';
+                        
+                        // Update the display text
+                        document.getElementById('scriptText').textContent = newText;
+                        current.text = newText;
+                        
+                        // Exit edit mode
+                        // this.cancelEdit();
+                        
+                        // Force reload audio with cache busting
+                        // const current = this.playlist[this.currentIndex];
+                        // const originalUrl = current.url;
+                        // const cacheBustUrl = `${originalUrl}?t=${Date.now()}`;
+                        // this.audioPlayer.src = cacheBustUrl;
+
+                        // this.audioPlayer.load();
+                        // this.audioPlayer.oncanplay = () => {
+                        //     this.audioPlayer.play().then(() => {
+                        //         this.isPlaying = true;
+                        //         this.updateStatus('▶ Playing updated audio');
+                        //         this.updateButtons();
+                        //     });
+                        // Update audio source with cache busting
+                        const current = this.playlist[this.currentIndex];
+                        const cacheBustUrl = `${current.url}?t=${Date.now()}`;
+                        this.audioPlayer.src = cacheBustUrl;
+                        this.updateStatus('✅ Ready to play updated audio');
+                        // };
+
+                        
+                    } else {
+                        this.editStatus.textContent = `❌ Error: ${result.error}`;
+                    }
+                    
+                } catch (error) {
+                    this.editStatus.textContent = `❌ Network error: ${error.message}`;
+                    console.error('Save error:', error);
+                }
+                
+                this.saveBtn.disabled = false;
+            }
         }
         
         // Initialize when page loads
         document.addEventListener('DOMContentLoaded', () => {
             new AudioPreview();
         });
+
+
     </script>
 </body>
 </html>

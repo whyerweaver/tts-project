@@ -11,6 +11,7 @@
 - [2025-05-30 – JavaScript Audio Preview System Implementation](#2025-05-30--javascript-audio-preview-system-implementation)
 - [2025-05-31 – Stage 1 Core Functionality: Dynamic HTML5 Audio Preview](#2025-05-31--stage-1-core-functionality-dynamic-html5-audio-preview)
 - [2025-05-31 Part 2 – Stage 1.5 Complete: Seamless Edit-to-Preview Workflow](#2025-05-31-part-2--stage-15-complete-seamless-edit-to-preview-workflow)
+- [2025-06-01 – Stage 2 Core Functionality: Inline Edit Mode with API Backend](#2025-06-01--stage-2-core-functionality-inline-edit-mode-with-api-backend)
 
 ---
 
@@ -654,13 +655,73 @@ PC1 successfully synchronized with remote repository. All Stage 1 and 1.5 work p
 
 ---
 
-## Instructions for Master Doc Update
+## 2025-06-01 – Stage 2 Core Functionality: Inline Edit Mode with API Backend
+------------------------------------------------------------
 
-1. **Copy the TOC entry** (line 4) to your Table of Contents section
-2. **Copy the session block** (lines 8-79) to the end of your master document  
-3. **Save and upload** the updated master .md file to the project folder before next session
+### Session Focus
+Implemented complete inline text editing system with Node.js API backend for seamless script modification and TTS regeneration workflow.
 
-## Next Session Preparation
-- Ensure all changes are committed to git for cross-PC reliability
-- Test complete edit workflow on any script changes needed
-- Consider Stage 2 inline editing requirements if desired
+### What Was Done
+- **Final Vision Documentation:** Created comprehensive roadmap document (`docs/tts_project_final_vision.md`) with technical implementation details and phased development strategy
+- **Auto-Play Issue Resolution:** Fixed Chrome autoplay policy conflicts with proper user interaction handling and error messaging
+- **Inline Edit Interface:** Added complete edit mode functionality to HTML5 preview system:
+  - Edit/Save/Cancel buttons with professional styling
+  - Textarea interface for in-browser text editing
+  - Real-time status messaging and user feedback
+  - Proper event handling and UI state management
+- **Node.js API Backend:** Created full-featured Express server (`server.js`) with:
+  - RESTful API endpoint for save/regenerate operations
+  - Script.txt file updating with correct line matching
+  - Dynamic audio generation using existing TTS infrastructure
+  - Error handling and logging for debugging
+- **Complete Edit Workflow:** Successfully implemented script update → TTS generation → file creation pipeline
+
+### Key Technical Achievements
+- **Browser-Based Editing:** Users can now edit script text directly in the preview interface
+- **API Integration:** Express server handles file operations and TTS generation requests
+- **Real-Time Feedback:** Edit status updates show save/regenerate progress
+- **File Synchronization:** Script.txt and audio files stay synchronized through API calls
+- **Cache Busting:** Implemented audio file refresh to prevent browser caching issues
+
+### Current System Status
+**Core edit functionality working:** 
+- ✅ Edit mode activates correctly
+- ✅ Text editing interface functional
+- ✅ API successfully receives edit requests
+- ✅ Script.txt file updates confirmed
+- ✅ New audio files generate correctly
+- ❌ Audio playback timing conflicts during edit process (needs refinement)
+
+### Outstanding Issues
+- **Audio Playback Interference:** Player auto-starts during editing, disrupting workflow
+- **File Complexity:** Single HTML file has become difficult to maintain and debug
+- **Browser Cache Management:** Audio refresh timing needs optimization
+
+### Files Created/Modified
+- **`docs/tts_project_final_vision.md`** - Comprehensive development roadmap
+- **`server.js`** - Express API server for edit functionality
+- **`audio-preview-dynamic.html`** - Enhanced with complete edit interface
+- **`package.json`** - Added express and cors dependencies
+
+### Development Philosophy Success
+- **s,s,s methodology maintained:** Each component tested incrementally
+- **API-first approach:** Clean separation between frontend and backend operations
+- **User workflow focus:** Solved real editing friction with targeted improvements
+- **Foundation building:** Each enhancement builds on solid existing architecture
+
+### Next Steps
+- **Code Refactoring:** Separate HTML/CSS/JavaScript for better maintainability
+- **Audio Timing Fix:** Resolve playback conflicts during edit operations
+- **Enhanced UX:** Add auto-play after successful regeneration
+- **Error Handling:** Improve user feedback for API failures
+
+### Technical Architecture Established
+- **Frontend:** Enhanced HTML5 interface with inline editing capabilities
+- **Backend:** Node.js/Express API for file operations and TTS integration
+- **Integration:** RESTful communication between browser and server
+- **File Management:** Dynamic script updating with line-number matching
+
+### Session Impact
+**Major milestone achieved:** Implemented complete inline editing system that updates both script files and generates new audio. Core functionality proven working despite minor timing issues. Strong foundation established for Stage 2 development with clean API architecture.
+
+---

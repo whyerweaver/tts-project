@@ -100,7 +100,7 @@ async function generateSingleLine(fileNumber, speaker) {
 }
 
 // EDIT THESE VALUES:
-const fileNumber = 12;  // Which audio file number to replace (matches 001_, 002_, etc.)
+const fileNumber = 8;  // Which audio file number to replace (matches 001_, 002_, etc.)
 const speaker = 'AARON';  // LAURA, AARON, or CHRIS - must match the speaker for that file
 
 generateSingleLine(fileNumber, speaker);
