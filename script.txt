@@ -1,6 +1,6 @@
-LAURA: Welcome to the show. Today we have a topic we're sure you'll enjoy and find informative.
-CHRIS: That's right Laura, We'll be looking at on how Innovation, (think AI), is reshaping industries and the crucial role young professionals are facing as they evolve with the changing landscape.
-LAURA: yes, the landscape is indeed shifting. It's an exciting, challenging time. Our lines are open! Call us with your experiences.
+LAURA: Welcome to the show. Today we have a topic we're sure you'll enjoy and find educational.
+CHRIS: That's right Laura, We'll be looking at how Innovation, (think AI), is reshaping industries and the crucial role young professionals are facing as they evolve with the changing landscape.
+LAURA: Yes. The landscape is indeed shifting. It's an exciting, challenging time. Our lines are open! Call us with your experiences.
 EFFECT: A phone is ringing.
 LAURA: Welcome to the show.
 AARON: Hi Laura, Chris. I'm Aaron, from Connecticut. Appreciate the opportunity to join in.
@@ -9,7 +9,7 @@ AARON: Technological shifts, the impact of AI in particular, has kept me focused
 CHRIS: Hi Aaron, this is Chris. Law, not the first profession that comes to mind when you think of AI and it's impact. 
 AARON: True, but I'm an associate attorney at Parrett, Porto, Parese & Colwell in Southington. We're finding that technology and data are rapidly influencing strategy, pushing us to constantly evolve our problem-solving. 
 CHRIS: Aaron, give us a bit of insight on how the diverse subjects Law, and Technology, interacted in your own life. Some background to appreciate the path which enabled a young professional to play a role in the dramatic changes we're all facing?
-AARON: Sure, My academic journey started at Holy Cross, there I built a strong foundation. Then UConn Law in Hartford, where I learned that precision was crucial, ad was essential preparation for my passing the bar in July 2023 and being sworn in that November. My very first steps included an internship at the U.S. Attorney's Office. I discovered there that  applying Law was about dissecting intricate problems, and identifying optimal paths. 
+AARON: Sure.  My academic journey started at Holy Cross, there I built a strong foundation. Then at UConn Law in Hartford, was where I learned that precision was crucial. It was essential to the preparation for my passing the bar in July 2023 and being sworn in that November. My very first steps included an internship at the U.S. Attorney's Office. I discovered there that  applying Law was about dissecting intricate problems, and identifying optimal paths. 
 CHRIS: So the time with the U.S. Attorney, navigating civil and criminal waters, helped to further hone your strategic thinking?
 AARON: Definitely, they taught me to understand the legal landscape, anticipate moves, and develop strategy. Like a complex battlefield, decisions ripple. I learned to identify patterns and secure objectives.
 LAURA: Then your first real world encounter with Law was where you began to appreciate the growing impact of technology on the profession? 

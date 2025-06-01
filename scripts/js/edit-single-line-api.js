@@ -43,4 +43,4 @@ async function generateSingleLine(fileNumber, speaker, text) {
     }
 }
 
-generateSingleLine(1, 'LAURA', `Welcome to the show. Today we have a topic we're sure you'll enjoy and find informative.`);
+generateSingleLine(3, 'LAURA', `Yes. The landscape is indeed shifting. It's an exciting, challenging time. Our lines are open! Call us with your experiences.`);
