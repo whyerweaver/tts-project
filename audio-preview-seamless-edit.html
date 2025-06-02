@@ -708,6 +708,11 @@
             }
             
             handleKeyboard(e) {
+                // Skip keyboard shortcuts when in edit mode
+                if (document.getElementById('scriptEdit').style.display === 'block') {
+                    return;
+                }
+
                 switch(e.code) {
                     case 'Space':
                         e.preventDefault();
