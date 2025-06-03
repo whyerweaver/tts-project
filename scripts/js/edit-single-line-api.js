@@ -43,4 +43,4 @@ async function generateSingleLine(fileNumber, speaker, text) {
     }
 }
 
-generateSingleLine(23, 'LAURA', `We appreciate your sharing you're unique journey with us. You've brought into focus an aspect of your generations life experiences we might have easily overlooked.   To wrap this up, looking ahead, how do you see Parrett, Porto, Parese & Colwell positioning themselves to continue adapting and thriving in this evolving legal landscape?`);
+generateSingleLine(6, 'CHRIS', `“First, stop pretending to be someone you’re not. I wasted thirty years wearing masks, afraid people wouldn’t like the real me. What a waste! Some people will love your true self, others won’t. The freedom comes from not caring either way.”`);

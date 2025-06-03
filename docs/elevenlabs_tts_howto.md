@@ -1,7 +1,7 @@
 # ElevenLabs Text-to-Speech Project Guide
 
 ## Overview
-This project generates multi-voice audio content using the ElevenLabs API. Perfect for podcasts, audiobooks, or any multi-character audio content.
+This project generates multi-voice audio content using the ElevenLabs API. Perfect for podcasts, audiobooks, or any multi-character audio content. It features both batch generation and an interactive web-based editor for refinements.
 
 ## Project Structure
 ```
@@ -10,25 +10,24 @@ tts-project/
 ├── script.txt             # Your formatted script
 ├── timing-log.txt         # Generated sequence log
 ├── package.json           # Node.js dependencies
+├── initialize.js          # Path resolution helper
+├── server.js             # Interactive editing server
+├── audio-preview-seamless-edit.html  # Web UI for editing
 ├── output/                # Generated MP3 files
-├── sound-effects/         # Sound effect files
-├── final/                 # Completed audio files
 └── scripts/
-    ├── test-connection.js     # Verify API key
-    ├── test-api.js           # Test API connection
-    ├── list-voices.js        # Show available voices
-    ├── test-voices.js        # Test selected voices
-    ├── generate-audio.js     # Main script processor
-    └── edit-single-line.js   # Edit individual lines
+    └── js/
+        ├── test-connection.js  # Verify API key
+        ├── test-api.js        # Test API connection
+        └── generate-audio.js  # Main script processor
 ```
 
 ## Setup Instructions
 
 ### 1. Initial Setup
 ```bash
-npm init -y
-npm install axios dotenv
+npm install
 ```
+This installs all required dependencies (axios, cors, dotenv, express).
 
 ### 2. Configure API Key
 1. Get your ElevenLabs API key from elevenlabs.io
@@ -38,19 +37,20 @@ ELEVENLABS_API_KEY=your_api_key_here
 ```
 **Important:** No quotes around the API key!
 
-### 3. Test Connection
+### 3. Test Configuration
 ```bash
-node test-connection.js  # Should show "API Key loaded: Yes"
-node test-api.js         # Should show "Connection successful!"
+node scripts/js/test-connection.js  # Should show "API Key loaded: Yes"
+node scripts/js/test-api.js         # Should show "Connection successful!"
 ```
 
 ## Voice Configuration
-Current voice mapping in all scripts:
+Current voice mapping in generate-audio.js:
 - **LAURA** → FGY2WhTYpPnrIDTdsKH5 (young female)
 - **AARON** → TX3LPaxmHKxFdv7VOQHJ (young male) 
 - **CHRIS** → iP95p4xoKVk53GoZ742B (middle-aged male)
+- **EFFECT** → pFZP5JQG7iQjIQuC4Bku (for sound effects)
 
-To change voices, edit the `voices` object in each script file.
+To change voices, edit the `voices` object in generate-audio.js.
 
 ## Script Format
 Format your `script.txt` like this:
@@ -69,62 +69,44 @@ LAURA: Our caller is on the line.
 
 ## Usage Workflow
 
-### Step 1: Generate All Audio
+### Step 1: Generate Initial Audio
 ```bash
-node generate-audio.js
+node scripts/js/generate-audio.js
 ```
 This creates:
-- Numbered MP3 files in `output/` folder
-- `timing-log.txt` with sequence and sound effect locations
+- Numbered MP3 files in `output/` folder (e.g., 001_laura.mp3)
+- `timing-log.txt` with sequence information
 
-### Step 2: Edit Individual Lines (if needed)
-1. Open `timing-log.txt` to find line numbers
-2. Edit `edit-single-line.js`:
-```javascript
-const lineNumber = 5;           // Line to replace
-const speaker = 'LAURA';        // LAURA, AARON, or CHRIS
-const newText = 'New dialogue'; // Replacement text
+### Step 2: Interactive Editing
+1. Start the editing server:
+```bash
+node server.js
 ```
-3. Run: `node edit-single-line.js`
+This starts the Express server on port 3000.
 
-### Step 3: Assembly in Audacity
-1. Import all MP3s from `output/` folder
-2. Arrange in numerical order (001, 002, 003...)
-3. Add sound effects from `sound-effects/` folder using timing log
-4. Export final MP3 to `final/` folder
+2. Open audio-preview-seamless-edit.html:
+   - In VS Code, install the "Live Server" extension
+   - Right-click on audio-preview-seamless-edit.html
+   - Select "Open with Live Server"
+   - Browser will open to something like: http://127.0.0.1:5500/audio-preview-seamless-edit.html
+
+3. Use the web interface to:
+   - Play through all audio files
+   - Edit individual lines
+   - Automatically regenerate specific audio files
+   - Preview changes immediately
 
 ## Troubleshooting
 
 ### API Issues
 - **401 Error:** Check API key in `.env` file (no quotes!)
 - **Rate Limits:** Add delays between requests if generating many files
-- **Voice Not Found:** Run `node list-voices.js` to see available voices
+- **Voice Not Found:** Verify voice IDs in generate-audio.js
 
-### Audio Issues
-- **File Won't Import:** Use WAV format for sound effects
-- **Poor Quality:** Check ElevenLabs subscription limits
-- **Wrong Voice:** Verify speaker names match voice mapping exactly
-
-### Script Issues
-- **Missing Audio:** Check for extra spaces or wrong speaker names
-- **Sound Effects Skipped:** Use exact format `[SFX_DESCRIPTION]`
-
-## File Descriptions
-
-### Core Scripts
-- **generate-audio.js:** Main processor - converts script to numbered MP3 files
-- **edit-single-line.js:** Updates individual lines without regenerating everything
-- **list-voices.js:** Shows all available voices in your ElevenLabs account
-
-### Test Scripts
-- **test-connection.js:** Verifies API key is loaded correctly
-- **test-api.js:** Tests actual connection to ElevenLabs servers
-- **test-voices.js:** Creates sample audio for voice testing
-
-### Configuration Files
-- **.env:** Contains API key (never commit to git!)
-- **script.txt:** Your formatted dialogue script
-- **timing-log.txt:** Generated reference for assembly order
+### Web Interface Issues
+- **Can't Edit:** Make sure server.js is running on port 3000
+- **Audio Not Playing:** Check output/ folder for MP3 files
+- **Live Server:** Install VS Code Live Server extension if missing
 
 ## Tips & Best Practices
 
@@ -135,36 +117,40 @@ const newText = 'New dialogue'; // Replacement text
 
 ### Cost Management
 - ElevenLabs charges per character generated
-- Use `edit-single-line.js` for revisions instead of regenerating everything
+- Use the web interface for edits instead of regenerating everything
 - Preview lines mentally before generating
 
 ### Version Control
 - Add `.env` to `.gitignore` (API keys should never be in git)
 - Include sample `.env.example` file for setup reference
-- Keep `output/` folder in git for collaboration, exclude large final files
+- Keep `output/` folder in git for collaboration
 
 ### Audio Quality
-- Use 192 kbps MP3 export for good quality/size balance
-- Leave 0.5-1 second gaps between speakers in Audacity
-- Normalize audio levels before final export
+- Files are generated in high-quality MP3 format
+- Web interface allows for seamless playback and editing
+- Use gap settings in web interface for natural spacing
 
 ## Quick Reference Commands
 ```bash
-# Test everything is working
-node test-api.js
-
-# See available voices
-node list-voices.js
+# Test configuration
+node scripts/js/test-connection.js
+node scripts/js/test-api.js
 
 # Generate all audio from script
-node generate-audio.js
+node scripts/js/generate-audio.js
 
-# Edit line 5 to new text
-# (Edit the variables in edit-single-line.js first)
-node edit-single-line.js
+# Start editing server
+node server.js
 ```
 
 ## Support
 - ElevenLabs API Docs: https://elevenlabs.io/docs
-- Audacity Manual: https://manual.audacityteam.org/
 - Node.js/npm Issues: Check package.json dependencies
+
+---
+
+**Note on Legacy Features:**
+This documentation reflects the current streamlined workflow using the web-based editor (server.js + audio-preview-seamless-edit.html). The project repository may contain additional files from earlier development iterations (Python scripts, single-line editing tools, etc.) that are no longer part of the main workflow but have been retained for reference or backward compatibility. These deprecated features include:
+- Python-based tools (referenced in requirements.txt)
+- Individual line editing scripts (superseded by the web interface)
+- Manual audio assembly instructions (now handled by the web interface)
